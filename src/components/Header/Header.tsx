@@ -32,7 +32,7 @@ export const Header = ({
 
   const walletHandler = (connector: any) => {
     connect({ connector });
-    closeWalletModal();
+    // closeWalletModal();
   };
   const closeWalletModal = () => {
     setOpen(!open);
@@ -83,9 +83,10 @@ export const Header = ({
             onClose={closeWalletModal}
             label="Connect Wallet"
           >
-            <div className="text-center space-x-12 font-bold text-gray-600">
+            <div className="text-center flex justify-between space-x-12 font-bold ">
               {connectors.map((connector) => (
                 <button
+                className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
                   disabled={!connector.ready}
                   key={connector.id}
                   onClick={() => walletHandler(connector)}
@@ -98,8 +99,8 @@ export const Header = ({
                 </button>
               ))}
 
-              {error && <div>{error.message}</div>}
             </div>
+              {error && <div className="text-center my-2">{error.message}</div>}
           </ModalWrapper>
         </>
       </div>

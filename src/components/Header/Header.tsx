@@ -24,16 +24,16 @@ export const Header = ({
   onCreateAccount,
 }: HeaderProps) => {
   const [open, setOpen] = useState(false);
-  const { connect, connectors,error, isLoading, pendingConnector } =
+  const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
 
   const { isConnected, address } = useAccount();
-  const {disconnect} = useDisconnect()
+  const { disconnect } = useDisconnect();
 
-  const walletHandler = (connector:any) =>{
-    connect({connector})
-    closeWalletModal()
-  }
+  const walletHandler = (connector: any) => {
+    connect({ connector });
+    closeWalletModal();
+  };
   const closeWalletModal = () => {
     setOpen(!open);
   };
@@ -64,41 +64,44 @@ export const Header = ({
           </svg>
           <h1>Acme</h1>
         </div>
-        {isConnected ? (
-          <Button onClick={disconnect} size="large" label={`${shortenAddress(address!)}`} />
+        {!isConnected ? (
+          <Button
+            size="large"
+            label="Connect Wallet"
+            onClick={closeWalletModal}
+          />
         ) : (
-          <div>
-            <Button
-              size="large"
-              label="Connect Wallet"
-              onClick={closeWalletModal}
-            />
-          </div>
+          <Button
+            onClick={disconnect}
+            size="large"
+            label={`${shortenAddress(address!)}`}
+          />
         )}
+        <>
+          <ModalWrapper
+            open={open}
+            onClose={closeWalletModal}
+            label="Connect Wallet"
+          >
+            <div className="text-center space-x-12 font-bold text-gray-600">
+              {connectors.map((connector) => (
+                <button
+                  disabled={!connector.ready}
+                  key={connector.id}
+                  onClick={() => walletHandler(connector)}
+                >
+                  {connector.name}
+                  {!connector.ready && " (unsupported)"}
+                  {isLoading &&
+                    connector.id === pendingConnector?.id &&
+                    " (connecting)"}
+                </button>
+              ))}
 
-        <ModalWrapper
-          open={open}
-          onClose={closeWalletModal}
-          label="Connect Wallet"
-        >
-          <div className="text-center space-x-12 font-bold text-gray-600">
-            {connectors.map((connector) => (
-              <button
-                disabled={!connector.ready}
-                key={connector.id}
-                onClick={() => walletHandler(connector)}
-              >
-                {connector.name}
-                {!connector.ready && " (unsupported)"}
-                {isLoading &&
-                  connector.id === pendingConnector?.id &&
-                  " (connecting)"}
-              </button>
-            ))}
-
-            {error && <div>{error.message}</div>}
-          </div>
-        </ModalWrapper>
+              {error && <div>{error.message}</div>}
+            </div>
+          </ModalWrapper>
+        </>
       </div>
     </header>
   );

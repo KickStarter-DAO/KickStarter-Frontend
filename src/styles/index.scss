@@ -1,0 +1,30 @@
+.modal {
+    @apply absolute w-80 md:w-96 left-1/2 -translate-x-1/2 bg-blue-7 dark:bg-gray-4 p-6 rounded-xl md:rounded-2xl;
+    transition: all .3s ease-in-out;
+}
+.show-modal {
+    animation-name: animateModal;
+    animation-duration: .3s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+    -webkit-animation-timing-function: ease-in-out;
+}
+
+.hide-modal {
+    @apply opacity-0;
+}
+
+@keyframes animateModal {
+    from {
+        @apply -top-full;
+    }
+    to {
+        @apply top-1/2 -translate-y-1/2;
+    }
+}
+
+@keyframes hideModal {
+    100% {
+        @apply -top-full;
+    }
+}

@@ -1,9 +1,17 @@
+import React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@styles/Home.module.css'
+import { Header } from "@components/Header"
+
+type User = {
+  name: string;
+};
 
 const Home: NextPage = () => {
+  const [user, setUser] = React.useState<User>();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,6 +20,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Header
+        user={user}
+        onLogin={() => setUser({ name: 'Jane Doe' })}
+        onLogout={() => setUser(undefined)}
+        onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+      />
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
@@ -70,3 +84,4 @@ const Home: NextPage = () => {
 }
 
 export default Home
+

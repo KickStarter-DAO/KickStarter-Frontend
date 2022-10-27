@@ -2,6 +2,7 @@ import {
     createClient,
     defaultChains,
     configureChains,
+    chain
   } from 'wagmi'
 
 
@@ -11,7 +12,7 @@ import {
   import { InjectedConnector } from 'wagmi/connectors/injected'
   import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-  const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
+  const { chains, provider } = configureChains([chain.polygonMumbai], [
     alchemyProvider({ apiKey: "https://polygon-mumbai.g.alchemy.com/v2/VB93DJmRg-zD-VUxpnChy0k87mr-P-EG"}),
     publicProvider(),
   ])
@@ -35,7 +36,7 @@ import {
         })
     ],
     provider,
-    webSocketProvider
+    // webSocketProvider
 
  })
 

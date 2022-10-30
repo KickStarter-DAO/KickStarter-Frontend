@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Button } from "@components/Button";
-import ModalWrapper from "@components/ModalWrapper";
-import Image from "next/image";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { shortenAddress } from "utils/connector";
+import React, { useState } from "react"
+import { Button } from "@components/Button"
+import ModalWrapper from "@components/ModalWrapper"
+import Image from "next/image"
+import { useAccount, useConnect, useDisconnect } from "wagmi"
+import { shortenAddress } from "utils/connector"
 // import './header.css';
 
 
@@ -12,18 +12,18 @@ import { shortenAddress } from "utils/connector";
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+    useConnect()
 
-  const { isConnected, address } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { isConnected, address } = useAccount()
+  const { disconnect } = useDisconnect()
 
   const walletHandler = (connector: any) => {
-    connect({ connector });
+    connect({ connector })
     // closeWalletModal();
-  };
+  }
   const closeWalletModal = () => {
-    setOpen(!open);
-  };
+    setOpen(!open)
+  }
   return (
     <header>
       <div className="wrapper">
@@ -73,7 +73,7 @@ export const Header = () => {
             <div className="text-center flex justify-between space-x-12 font-bold ">
               {connectors.map((connector) => (
                 <button
-                className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
+                  className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
                   disabled={!connector.ready}
                   key={connector.id}
                   onClick={() => walletHandler(connector)}
@@ -85,12 +85,11 @@ export const Header = () => {
                     " (connecting)"}
                 </button>
               ))}
-
             </div>
-              {error && <div className="text-center my-2">{error.message}</div>}
+            {error && <div className="text-center my-2">{error.message}</div>}
           </ModalWrapper>
         </>
       </div>
     </header>
-  );
-};
+  )
+}

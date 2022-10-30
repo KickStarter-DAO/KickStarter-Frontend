@@ -1,16 +1,16 @@
-import React from 'react'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '@styles/Home.module.css'
+import React from "react"
+import type { NextPage } from "next"
+import Head from "next/head"
+import Image from "next/image"
+import styles from "@styles/Home.module.css"
 import { Header } from "@components/Header"
 
 type User = {
-  name: string;
-};
+  name: string
+}
 
 const Home: NextPage = () => {
-  const [user, setUser] = React.useState<User>();
+  const [user, setUser] = React.useState<User>()
 
   return (
     <div className={styles.container}>
@@ -22,9 +22,9 @@ const Home: NextPage = () => {
 
       <Header
         user={user}
-        onLogin={() => setUser({ name: 'Jane Doe' })}
+        onLogin={() => setUser({ name: "Jane Doe" })}
         onLogout={() => setUser(undefined)}
-        onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+        onCreateAccount={() => setUser({ name: "Jane Doe" })}
       />
       <main className={styles.main}>
         <h1 className={styles.title}>
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
 
@@ -73,7 +73,7 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
@@ -84,4 +84,3 @@ const Home: NextPage = () => {
 }
 
 export default Home
-

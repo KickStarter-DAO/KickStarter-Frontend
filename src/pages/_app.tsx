@@ -1,7 +1,7 @@
-import "@styles/globals.css"
-import type { AppProps } from "next/app"
-import { client } from "utils/connector"
-import { WagmiConfig } from "wagmi"
+
+import "@styles/globals.css";
+import type { AppProps } from "next/app";
+import { client } from "@utils/connector";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

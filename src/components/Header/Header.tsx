@@ -6,24 +6,11 @@ import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { shortenAddress } from "utils/connector"
 // import './header.css';
 
-type User = {
-  name: string
-}
 
-interface HeaderProps {
-  user?: User
-  onLogin: () => void
-  onLogout: () => void
-  onCreateAccount: () => void
-}
 
-export const Header = ({
-  user,
-  onLogin,
-  onLogout,
-  onCreateAccount,
-}: HeaderProps) => {
-  const [open, setOpen] = useState(false)
+
+export const Header = () => {
+  const [open, setOpen] = useState(false);
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect()
 
@@ -62,7 +49,7 @@ export const Header = ({
               />
             </g>
           </svg>
-          <h1>Acme</h1>
+          <h1>KickStarterDao</h1>
         </div>
         {!isConnected ? (
           <Button

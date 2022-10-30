@@ -62,7 +62,7 @@ export const Header = ({
               />
             </g>
           </svg>
-          <h1>Acme</h1>
+          <h1>KickStarterDao</h1>
         </div>
         {!isConnected ? (
           <Button

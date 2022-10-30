@@ -5,7 +5,7 @@ Link
 
 function Footer() {
   return (
-    <footer className='bg-[#F4F6FE] mt-32 flex justify-between p-8'>
+    <footer className='bg-[#F4F6FE]  flex justify-between p-8'>
         <div>
             <p className='text-[#495371]'>Copyright 2022</p>
             <p className='text-[#495371] font-bold'>KickstarterDao</p>

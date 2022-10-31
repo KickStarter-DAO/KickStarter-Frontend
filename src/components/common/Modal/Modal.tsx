@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react"
-import Modal from "react-modal"
+import ReactModal from "react-modal"
 import clsx from "clsx"
 
-Modal.setAppElement("#root") // this is for accessibility purpose. we want other page content to be hidden to assistive technology when this modal is opened
+ReactModal.setAppElement("#root") // this is for accessibility purpose. we want other page content to be hidden to assistive technology when this modal is opened
 
-type ModalWrapperProps = {
+type ModalProps = {
   open: boolean
   children?: ReactNode
   onClose?: () => void
@@ -17,14 +17,9 @@ const overlay = {
   },
 }
 
-const ModalWrapper = ({
-  open,
-  children,
-  onClose,
-  label,
-}: ModalWrapperProps) => {
+export const Modal = ({ open, children, onClose, label }: ModalProps) => {
   return (
-    <Modal
+    <ReactModal
       isOpen={open}
       closeTimeoutMS={300}
       onRequestClose={onClose}
@@ -36,8 +31,6 @@ const ModalWrapper = ({
       })}
     >
       {children}
-    </Modal>
+    </ReactModal>
   )
 }
-
-export default ModalWrapper

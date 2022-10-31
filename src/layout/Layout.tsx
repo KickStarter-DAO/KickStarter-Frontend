@@ -1,20 +1,17 @@
-import Footer from "@components/Footer/footer";
-import { Header } from "@components/Header";
-import React, { ReactNode } from "react";
+import React, { ReactNode } from "react"
+import { Footer } from "@layout/Footer"
+import { Header } from "@layout/Header"
 
-type childrenProps = {
-  children?: ReactNode;
-};
+type LayoutProps = {
+  children?: ReactNode
+}
 
-
-function Layout({ children }: childrenProps) {
+export function Layout({ children }: LayoutProps) {
   return (
     <>
       <Header />
       <main className="mb-32">{children}</main>
       <Footer />
     </>
-  );
+  )
 }
-
-export default Layout;

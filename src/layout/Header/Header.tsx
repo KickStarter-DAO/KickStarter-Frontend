@@ -1,16 +1,11 @@
 import React, { useState } from "react"
-import { Button } from "@components/Button"
-import ModalWrapper from "@components/ModalWrapper"
-import Image from "next/image"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
-import { shortenAddress } from "utils/connector"
-// import './header.css';
-
-
-
+import { shortenAddress } from "@utils/connector"
+import { Button } from "@components/common/Button"
+import { Modal } from "@components/common/Modal"
 
 export const Header = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect()
 
@@ -65,11 +60,7 @@ export const Header = () => {
           />
         )}
         <>
-          <ModalWrapper
-            open={open}
-            onClose={closeWalletModal}
-            label="Connect Wallet"
-          >
+          <Modal open={open} onClose={closeWalletModal} label="Connect Wallet">
             <div className="text-center flex justify-between space-x-12 font-bold ">
               {connectors.map((connector) => (
                 <button
@@ -87,7 +78,7 @@ export const Header = () => {
               ))}
             </div>
             {error && <div className="text-center my-2">{error.message}</div>}
-          </ModalWrapper>
+          </Modal>
         </>
       </div>
     </header>

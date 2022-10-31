@@ -6,15 +6,15 @@ module.exports = {
       backgroundImage: {
         "hero-pattern": "url('/assets/background.png')",
       },
-      fontSize:{
-        hero:"74px",
-        medium:"64px",
-        sub:"32px"
+      fontSize: {
+        hero: "74px",
+        medium: "64px",
+        sub: "32px",
       },
-      lineHeight:{
-        "leading-large":"101px",
-        "leading-mid":"44px"
-      }
+      lineHeight: {
+        "leading-large": "101px",
+        "leading-mid": "44px",
+      },
     },
   },
   plugins: [],

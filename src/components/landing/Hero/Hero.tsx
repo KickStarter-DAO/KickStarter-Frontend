@@ -1,7 +1,10 @@
 import React from "react"
+import { useRouter } from "next/router"
 import { Button } from "@components/common/Button"
 
 export function Hero() {
+  const router = useRouter()
+
   return (
     <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center h-[33rem]">
       <div className="container mx-auto">
@@ -22,6 +25,9 @@ export function Hero() {
               size="small"
               backgroundColor="#398AB9"
               label="Business Funding"
+              onClick={() => {
+                router.push("/create-project")
+              }}
             />
             <Button
               size="small"

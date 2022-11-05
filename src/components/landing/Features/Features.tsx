@@ -15,13 +15,13 @@ export function Features() {
         alt={"dollar-bill"}
       />
       <FeatureCard
-        header="Investment Security & Variety"
+        header="Investment Security &amp; Variety"
         description="Investors on investify can apply to fund any business of their choice from the pool at any point in time, investors can invest money at any time and either get a percentage return or equity, in accordance to how the businesses wants it. The DAO also provides security in funds for investors inorder to limit losses"
         src={chains}
         alt={"chains"}
       />
       <FeatureCard
-        header="Transparency & Accountability"
+        header="Transparency &amp; Accountability"
         description="The carefully vetted DAO are saddled with the responsibility of making the right decision and are also reliable the financial flow is open for all investors to query. The money contributed by invevestors are not released once but would rather be broken down into bits in order to ensure all terms and conditions are followed through and also to monitor operations and minimize loss"
         src={contract}
         alt={"contract"}

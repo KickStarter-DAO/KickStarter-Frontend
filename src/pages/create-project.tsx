@@ -1,11 +1,25 @@
 import React, { useState } from "react"
 import type { NextPage } from "next"
 import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
 
+const schema = z.object({
+  name: z.string().min(1, { message: "Required" }),
+  website: z.number().min(10, { message: "Required" }),
+})
+
 const CreateProject: NextPage = () => {
-  const { register, handleSubmit } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  })
+
   const [data, setData] = useState("")
 
   return (
@@ -63,7 +77,7 @@ export default CreateProject
 //   images4: "",
 //   images5: "",
 //   video: "",
-//   fundRaisingGoalAmount: "",
+//   fundRaisingGoalAmount: "", // fundingTarget
 //   roadMap: "",
 //   otherSources: "",
 //   projectID: "",

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
+import { Button } from "@components/common/Button"
 
 const createProject = async (data: any) => {
   const res = await fetch("/api/project", {
@@ -32,6 +33,7 @@ const schema = z.object({
 
 // TODO: connect wallet
 // TODO: after uploading data, push it to contract
+// TODO: use WYSIWYG
 const CreateProject: NextPage = () => {
   const {
     register,
@@ -94,12 +96,12 @@ const CreateProject: NextPage = () => {
           {...register("description")}
           placeholder="Description"
         />
-        <label htmlFor="images">Images</label>
+        
+        <label htmlFor="image">Image</label>
         <input
           type="file"
-          multiple
-          {...register("images")}
-          placeholder="Images"
+          {...register("image")}
+          placeholder="Image"
         />
         {/* <select {...register("category", { required: true })}>
           <option value="">Select...</option>
@@ -108,7 +110,7 @@ const CreateProject: NextPage = () => {
         </select>
         <textarea {...register("aboutYou")} placeholder="About you" /> */}
         <p>{data}</p>
-        <input type="submit" />
+        <Button type="submit" primary label="Submit" />
       </form>
     </Layout>
   )

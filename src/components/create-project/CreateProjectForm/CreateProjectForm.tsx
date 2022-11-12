@@ -38,7 +38,7 @@ type CreateProjectFormProps = {
 }
 
 // TODO: after uploading data, push it to contract
-// TODO: use WYSIWYG
+// TODO: use WYSIWYG.
 export function CreateProjectForm({ address }: CreateProjectFormProps) {
   const {
     register,

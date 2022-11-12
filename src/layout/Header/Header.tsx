@@ -60,9 +60,11 @@ export const Header = () => {
           />
         ) : (
           <Button
-            onClick={disconnect}
             size="large"
             label={`${shortenAddress(address!)}`}
+            onClick={() => {
+              disconnect()
+            }}
           />
         )}
         <>

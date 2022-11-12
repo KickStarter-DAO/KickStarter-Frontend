@@ -5,6 +5,7 @@ import * as z from "zod"
 import type { Address } from "wagmi"
 import { ipfs } from "@services/ipfs"
 import { Button } from "@components/common/Button"
+import { FieldError } from "@components/common/FieldError"
 
 const MAX_FILE_SIZE = 500000
 const ACCEPTED_IMAGE_TYPES = [
@@ -75,47 +76,57 @@ export function CreateProjectForm({ address }: CreateProjectFormProps) {
       className="container mx-auto flex flex-col gap-4"
       onSubmit={handleSubmit(handleUpload)}
     >
-      <input type="text" id="address" {...register("address")} />
-      {errors.address?.message && (
-        <p>{JSON.stringify(errors.address?.message)}</p>
-      )}
+      <input
+        type="hidden"
+        id="address"
+        {...register("address")}
+        value={address}
+      />
+      <FieldError msg={errors.address?.message} />
 
-      <label htmlFor="name">Project name</label>
+      <label htmlFor="name">Project name*</label>
       <input
         type="text"
         id="name"
         {...register("name")}
         placeholder="Project name"
       />
-      {errors.name?.message && <p>{JSON.stringify(errors.name?.message)}</p>}
+      <FieldError msg={errors.name?.message} />
 
-      <label htmlFor="website">Website</label>
+      <label htmlFor="website">Website*</label>
       <input
         type="text"
         id="website"
         {...register("website")}
         placeholder="Website"
       />
-      {errors.website?.message && (
-        <p>{JSON.stringify(errors.website?.message)}</p>
-      )}
+      <FieldError msg={errors.website?.message} />
 
-      <label htmlFor="description">Description</label>
+      <label htmlFor="description">Description*</label>
       <textarea
         id="description"
         rows={8}
         {...register("description")}
         placeholder="Description"
       />
+      <FieldError msg={errors.description?.message} />
 
-      <label htmlFor="images">Images</label>
-      <input type="file" {...register("image")} placeholder="Image" />
+      <label htmlFor="image">Image*</label>
+      <input
+        type="file"
+        id="image"
+        {...register("image")}
+        placeholder="Image"
+      />
+      <FieldError msg={errors.image?.message} />
 
       {disabled ? (
         <p>Uploading...</p>
       ) : (
         <Button type="submit" primary label="Submit" disabled={disabled} />
       )}
+
+      <small>* Required fields</small>
     </form>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Link from "next/link"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { shortenAddress } from "@utils/connector"
 import { Button } from "@components/common/Button"
@@ -19,6 +20,7 @@ export const Header = () => {
   const closeWalletModal = () => {
     setOpen(!open)
   }
+
   return (
     <header>
       <div className="wrapper">
@@ -44,7 +46,11 @@ export const Header = () => {
               />
             </g>
           </svg>
-          <h1>KickStarterDao</h1>
+          <Link href="/">
+            <a>
+              <h1>KickStarterDao</h1>
+            </a>
+          </Link>
         </div>
         {!isConnected ? (
           <Button
@@ -54,9 +60,11 @@ export const Header = () => {
           />
         ) : (
           <Button
-            onClick={disconnect}
             size="large"
             label={`${shortenAddress(address!)}`}
+            onClick={() => {
+              disconnect()
+            }}
           />
         )}
         <>

@@ -15,15 +15,15 @@ export function FeatureCard({
   alt,
 }: FeatureCardProps) {
   return (
-    <div className="flex justify-between space-x-48 items-center">
-      <div>
-        <h2 className="font-bold my-8 font-bold text-2xl text-[#000000 leading-mid]">
+    <div className="flex justify-between min-h-48 max-w-6xl">
+      <div className="flex-1">
+        <h2 className="font-bold mb-8 font-bold text-2xl text-[#000000 leading-mid]">
           {header}
         </h2>
         <p className="w-3/4 text-[#495371] leading-mid">{description}</p>
       </div>
 
-      <div>
+      <div className="flex-none self-center p-4 w-32 h-32 flex justify-center">
         <img src={src.src} alt={alt} />
       </div>
     </div>

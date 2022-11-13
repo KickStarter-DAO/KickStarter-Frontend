@@ -11,6 +11,7 @@ const Home: NextPage = () => {
       <MetaData />
       <Hero />
       <Features />
+      <div className="h-8" />
     </Layout>
   )
 }

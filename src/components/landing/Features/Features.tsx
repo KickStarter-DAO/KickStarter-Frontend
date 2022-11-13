@@ -7,7 +7,7 @@ import { FeatureCard } from "@components/landing/FeatureCard"
 
 export function Features() {
   return (
-    <section className="container mx-auto grid gap-8">
+    <section className="container mx-auto grid gap-y-12 py-12">
       <FeatureCard
         header="Business Funding"
         description="Invesify allows businesses the opportunity to apply for funding, the carefully vetted DAO gets to scrutinize business proposals and pitch before accepting them into the pool for them to generate funds, this breaks the barrier and lets any business no matter what scale to secure funds"

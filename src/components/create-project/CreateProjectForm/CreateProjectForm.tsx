@@ -6,6 +6,8 @@ import type { Address } from "wagmi"
 import { ipfs } from "@services/ipfs"
 import { Button } from "@components/common/Button"
 import { FieldError } from "@components/common/FieldError"
+import useGovernanceContract from "src/web3/hooks/useContract"
+import toast, {Toaster} from "react-hot-toast"
 
 const MAX_FILE_SIZE = 500000
 const ACCEPTED_IMAGE_TYPES = [
@@ -40,6 +42,10 @@ type CreateProjectFormProps = {
 // TODO: after uploading data, push it to contract
 // TODO: use WYSIWYG.
 export function CreateProjectForm({ address }: CreateProjectFormProps) {
+  const { contract } = useGovernanceContract()
+
+  console.log("contract:", contract)
+
   const {
     register,
     handleSubmit,
@@ -63,15 +69,17 @@ export function CreateProjectForm({ address }: CreateProjectFormProps) {
       obj["image"] = `ipfs://${imageCID.path}`
       const json = JSON.stringify(obj, null, 2)
       const jsonCID = await ipfs.add(json)
-      alert(`Upload to IPFS success, ${jsonCID.path}`)
+      toast.success(`Upload to IPFS success, ${jsonCID.path}`)
     } catch (err: any) {
-      alert(`Something went wrong, ${JSON.stringify(err)}`)
+      toast.error(`Something went wrong, ${JSON.stringify(err)}`)
     } finally {
       setDisabled(false)
     }
   }
 
   return (
+    <>
+    <Toaster/>
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleUpload)}>
       <input
         type="hidden"
@@ -125,6 +133,7 @@ export function CreateProjectForm({ address }: CreateProjectFormProps) {
 
       <small>* Required fields</small>
     </form>
+    </>
   )
 }
 

@@ -38,7 +38,7 @@ type CreateProjectFormProps = {
 }
 
 // TODO: after uploading data, push it to contract
-// TODO: use WYSIWYG
+// TODO: use WYSIWYG.
 export function CreateProjectForm({ address }: CreateProjectFormProps) {
   const {
     register,
@@ -72,10 +72,7 @@ export function CreateProjectForm({ address }: CreateProjectFormProps) {
   }
 
   return (
-    <form
-      className="container mx-auto flex flex-col gap-4"
-      onSubmit={handleSubmit(handleUpload)}
-    >
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleUpload)}>
       <input
         type="hidden"
         id="address"

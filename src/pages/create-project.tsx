@@ -11,8 +11,14 @@ const CreateProject: NextPage = () => {
   return (
     <Layout>
       <MetaData />
-      {!isConnected && <p>Please, connect your wallet</p>}
-      {isConnected && <CreateProjectForm address={address!} />}
+      <div className="h-8" />
+      <div className="container mx-auto">
+        <p className="text-black mt-1 text-sub leading-mid mb-8">
+          Create a new project
+        </p>
+        {!isConnected && <p>Please, connect your wallet</p>}
+        {isConnected && <CreateProjectForm address={address!} />}
+      </div>
     </Layout>
   )
 }

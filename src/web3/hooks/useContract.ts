@@ -11,6 +11,9 @@ const useGovernanceContract = () => {
     signerOrProvider: signer || provider,
   })
 
+
+  
+
   return {
     contract,
   }

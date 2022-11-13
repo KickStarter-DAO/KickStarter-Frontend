@@ -35,11 +35,15 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
+  onCreate: (hash: string) => void
 }
 
 // TODO: after uploading data, push it to contract
 // TODO: use WYSIWYG.
-export function CreateProjectForm({ address }: CreateProjectFormProps) {
+export function CreateProjectForm({
+  address,
+  onCreate,
+}: CreateProjectFormProps) {
   const {
     register,
     handleSubmit,
@@ -64,6 +68,7 @@ export function CreateProjectForm({ address }: CreateProjectFormProps) {
       const json = JSON.stringify(obj, null, 2)
       const jsonCID = await ipfs.add(json)
       alert(`Upload to IPFS success, ${jsonCID.path}`)
+      onCreate(jsonCID.path)
     } catch (err: any) {
       alert(`Something went wrong, ${JSON.stringify(err)}`)
     } finally {

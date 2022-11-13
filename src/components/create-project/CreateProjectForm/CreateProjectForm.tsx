@@ -42,9 +42,7 @@ type CreateProjectFormProps = {
 // TODO: after uploading data, push it to contract
 // TODO: use WYSIWYG.
 export function CreateProjectForm({ address }: CreateProjectFormProps) {
-  const { contract } = useGovernanceContract()
-
-  console.log("contract:", contract)
+  // const { contract } = useGovernanceContract()
 
   const {
     register,

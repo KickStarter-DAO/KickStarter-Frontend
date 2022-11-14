@@ -11,7 +11,7 @@ const { chains, provider } = configureChains(
   [
     alchemyProvider({
       apiKey:
-        "https://polygon-mumbai.g.alchemy.com/v2/VB93DJmRg-zD-VUxpnChy0k87mr-P-EG",
+        "siOqyOzfvYhZJr_HOoWfz1Sglg09ffUm",
     }),
     publicProvider(),
   ],

@@ -4,10 +4,12 @@ import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
 import { Hero } from "@components/landing/Hero"
 import { Features } from "@components/landing/Features"
+import  {Toaster} from "react-hot-toast"
 
 const Home: NextPage = () => {
   return (
     <Layout>
+      <Toaster/>
       <MetaData />
       <Hero />
       <Features />

@@ -8,9 +8,9 @@ import { CHAIN_ID } from "src/web3/constants"
 import dynamic from "next/dynamic"
 
 const Button = dynamic<React.ComponentProps<typeof StaticButton>>(
-  () => import('@components/common/Button').then(mod => mod.Button), { ssr: false }
+  () => import("@components/common/Button").then((mod) => mod.Button),
+  { ssr: false },
 )
-
 
 export const Header = () => {
   const [open, setOpen] = useState(false)
@@ -24,7 +24,7 @@ export const Header = () => {
 
   const walletHandler = (connector: any) => {
     connect({ connector })
-    // closeWalletModal();
+    closeWalletModal()
   }
   const closeWalletModal = () => {
     setOpen(!open)
@@ -63,21 +63,21 @@ export const Header = () => {
         </div>
         {!isConnected ? (
           <>
-          <Button
-            size="large"
-            label="Connect Wallet"
-            onClick={closeWalletModal}
-          />
+            <Button
+              size="large"
+              label="Connect Wallet"
+              onClick={closeWalletModal}
+            />
           </>
         ) : (
           <>
-          <Button
-            size="large"
-            label={`${shortenAddress(address!)}`}
-            onClick={() => {
-              disconnect()
-            }}
-          />
+            <Button
+              size="large"
+              label={`${shortenAddress(address!)}`}
+              onClick={() => {
+                disconnect()
+              }}
+            />
           </>
         )}
         <>

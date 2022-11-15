@@ -23,8 +23,8 @@ const schema = z.object({
   address: z.string().min(16, { message: "You are not logged in!" }),
   name: z.string().min(1, { message: "Name is required" }),
   website: z.string().min(1, { message: "Website is required" }),
-  amount: z.string().min(1, { message: "Funding Goal is required" }),
-  time: z.string().min(1, { message: "Funding Time is required" }),
+  amount: z.number().int().gt(1, { message: "Funding Goal is required" }),
+  time: z.number().int().gt(1, { message: "Funding Time is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   image: z
     .any()
@@ -80,27 +80,27 @@ export function CreateProjectForm({
       const json = JSON.stringify(obj, null, 2)
       const jsonCID = await ipfs.add(json)
       toast.success(`Upload to IPFS success, ${jsonCID.path}`)
-      const resFee = await contract?.paySubmitFee({
-        value: ethers.utils.parseEther("0.01"),
-      })
-      if (!resFee.hash) return
-      await resFee.wait()
-      const projectId = await contract?.getCurrentProjectId()
-      const encode = await contract?.interface.encodeFunctionData(FUNC_FUND, [
-        jsonCID.path,
-        amount,
-        time,
-        projectId?.toString(),
-      ])
-      const submitTxn = await contract?.propose(
-        [signer],
-        [0],
-        [encode],
-        jsonCID.path,
-      )
+      // const resFee = await contract?.paySubmitFee({
+      //   value: ethers.utils.parseEther("0.01"),
+      // })
+      // if (!resFee.hash) return
+      // await resFee.wait()
+      // const projectId = await contract?.getCurrentProjectId()
+      // const encode = await contract?.interface.encodeFunctionData(FUNC_FUND, [
+      //   jsonCID.path,
+      //   amount,
+      //   time,
+      //   projectId?.toString(),
+      // ])
+      // const submitTxn = await contract?.propose(
+      //   [signer],
+      //   [0],
+      //   [encode],
+      //   jsonCID.path,
+      // )
 
-      if (!submitTxn) return
-      await submitTxn.wait()
+      // if (!submitTxn) return
+      // await submitTxn.wait()
       toast.success("proposal created successfully!")
       onCreate(jsonCID.path)
     } catch (err: any) {
@@ -132,12 +132,15 @@ export function CreateProjectForm({
           placeholder="Project name"
         />
         <FieldError msg={errors.name?.message} />
-        <label htmlFor="amount">Funding GoalAmount*</label>
+
+        <label htmlFor="amount">Funding Goal*</label>
         <input
           type="number"
           id="amount"
-          {...register("amount")}
-          placeholder="Funding Goal"
+          {...register("amount", {
+            valueAsNumber: true,
+          })}
+          placeholder="Funding goal/amount in USD"
         />
         <FieldError msg={errors.amount?.message} />
 
@@ -145,7 +148,9 @@ export function CreateProjectForm({
         <input
           type="number"
           id="time"
-          {...register("time")}
+          {...register("time", {
+            valueAsNumber: true,
+          })}
           placeholder="Funding Time"
         />
         <FieldError msg={errors.time?.message} />

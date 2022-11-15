@@ -12,6 +12,9 @@ import { ethers } from "ethers"
 import { FUNC_FUND } from "src/web3/constants"
 
 const MAX_FILE_SIZE = 500000
+const DAY = 60 * 60 * 24
+const WEEK = 7 * DAY // amount of secs in a week time
+const MONTH = 30 * DAY // amount of secs in a month time
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -145,14 +148,25 @@ export function CreateProjectForm({
         <FieldError msg={errors.amount?.message} />
 
         <label htmlFor="time">Funding Time*</label>
-        <input
+        <select
+          id="time"
+          {...register("time", {
+            valueAsNumber: true,
+          })}
+        >
+          <option value={WEEK}>1 week</option>
+          <option value={2 * WEEK}>2 weeks</option>
+          <option value={MONTH}>1 month</option>
+          <option value={2 * MONTH}>1 motnhs</option>
+        </select>
+        {/* <input
           type="number"
           id="time"
           {...register("time", {
             valueAsNumber: true,
           })}
           placeholder="Funding Time"
-        />
+        /> */}
         <FieldError msg={errors.time?.message} />
 
         <label htmlFor="website">Website*</label>

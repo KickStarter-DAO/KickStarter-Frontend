@@ -2,13 +2,22 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { shortenAddress } from "@utils/connector"
-import { Button } from "@components/common/Button"
+import { Button as StaticButton } from "@components/common/Button"
 import { Modal } from "@components/common/Modal"
+import { CHAIN_ID } from "src/web3/constants"
+import dynamic from "next/dynamic"
+
+const Button = dynamic<React.ComponentProps<typeof StaticButton>>(
+  () => import('@components/common/Button').then(mod => mod.Button), { ssr: false }
+)
+
 
 export const Header = () => {
   const [open, setOpen] = useState(false)
   const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect()
+    useConnect({
+      chainId: CHAIN_ID,
+    })
 
   const { isConnected, address } = useAccount()
   const { disconnect } = useDisconnect()
@@ -53,12 +62,15 @@ export const Header = () => {
           </Link>
         </div>
         {!isConnected ? (
+          <>
           <Button
             size="large"
             label="Connect Wallet"
             onClick={closeWalletModal}
           />
+          </>
         ) : (
+          <>
           <Button
             size="large"
             label={`${shortenAddress(address!)}`}
@@ -66,6 +78,7 @@ export const Header = () => {
               disconnect()
             }}
           />
+          </>
         )}
         <>
           <Modal open={open} onClose={closeWalletModal} label="Connect Wallet">

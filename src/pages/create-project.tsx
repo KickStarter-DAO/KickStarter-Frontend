@@ -28,6 +28,7 @@ const CreateProject: NextPage = () => {
           />
         )}
       </div>
+      <div className="h-16" />
     </Layout>
   )
 }

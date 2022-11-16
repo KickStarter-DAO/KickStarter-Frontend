@@ -15,6 +15,7 @@ const MAX_FILE_SIZE = 500000
 const DAY = 60 * 60 * 24
 const WEEK = 7 * DAY // amount of secs in a week time
 const MONTH = 30 * DAY // amount of secs in a month time
+
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -25,13 +26,14 @@ const ACCEPTED_IMAGE_TYPES = [
 const schema = z.object({
   address: z.string().min(16, { message: "You are not logged in!" }),
   name: z.string().min(1, { message: "Name is required" }),
-  website: z.string().min(1, { message: "Website is required" }),
   amount: z.number().int().gt(1, { message: "Funding Goal is required" }),
   time: z.number().int().gt(1, { message: "Funding Time is required" }),
+  website: z.string().min(1, { message: "Website is required" }),
+  videoUrl: z.string(),
   description: z.string().min(1, { message: "Description is required" }),
-  image: z
+  thumbnail: z
     .any()
-    .refine((files) => files?.length === 1, "Image is required.")
+    .refine((files) => files?.length === 1, "Thumbnail is required.")
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Max file size is 5MB.`,
@@ -47,7 +49,6 @@ type CreateProjectFormProps = {
   onCreate: (hash: string) => void
 }
 
-// TODO: after uploading data, push it to contract
 // TODO: use WYSIWYG.
 export function CreateProjectForm({
   address,
@@ -72,17 +73,18 @@ export function CreateProjectForm({
     setDisabled(true)
 
     try {
-      const { image, ...rest } = data
-      const { amount, time } = data
-      // Upload image to IPFS to get CID hash back.
-      const imageCID = await ipfs.add(image[0])
-      // Attach image CID to the rest of the form's data
+      const { thumbnail, ...rest } = data
+      // Upload thumbnail to IPFS to get CID hash back.
+      const thumbnailCID = await ipfs.add(thumbnail[0])
+      // Attach thumbnail CID to the rest of the form's data
       // and upload it to IPFS getting a CID hash back.
       const obj = { ...rest }
-      obj["image"] = `ipfs://${imageCID.path}`
+      obj["thumbnail"] = `ipfs://${thumbnailCID.path}`
       const json = JSON.stringify(obj, null, 2)
       const jsonCID = await ipfs.add(json)
       toast.success(`Upload to IPFS success, ${jsonCID.path}`)
+
+      const { amount, time } = data
       // const resFee = await contract?.paySubmitFee({
       //   value: ethers.utils.parseEther("0.01"),
       // })
@@ -104,7 +106,7 @@ export function CreateProjectForm({
 
       // if (!submitTxn) return
       // await submitTxn.wait()
-      toast.success("proposal created successfully!")
+      toast.success("Proposal created successfully!")
       onCreate(jsonCID.path)
     } catch (err: any) {
       toast.error(err)
@@ -114,112 +116,93 @@ export function CreateProjectForm({
   }
 
   return (
-    <React.Fragment>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={handleSubmit(handleUpload)}
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleUpload)}>
+      <input
+        type="hidden"
+        id="address"
+        {...register("address")}
+        value={address}
+      />
+      <FieldError msg={errors.address?.message} />
+
+      <label htmlFor="name">Project Name*</label>
+      <input
+        type="text"
+        id="name"
+        {...register("name")}
+        placeholder="Project name"
+      />
+      <FieldError msg={errors.name?.message} />
+
+      <label htmlFor="amount">Funding Goal*</label>
+      <input
+        type="number"
+        id="amount"
+        {...register("amount", {
+          valueAsNumber: true,
+        })}
+        placeholder="Funding goal/amount in USD"
+      />
+      <FieldError msg={errors.amount?.message} />
+
+      <label htmlFor="time">Funding Time*</label>
+      <select
+        id="time"
+        {...register("time", {
+          valueAsNumber: true,
+        })}
       >
-        <input
-          type="hidden"
-          id="address"
-          {...register("address")}
-          value={address}
-        />
-        <FieldError msg={errors.address?.message} />
+        <option value={WEEK}>1 week</option>
+        <option value={2 * WEEK}>2 weeks</option>
+        <option value={3 * WEEK}>3 weeks</option>
+        <option value={MONTH}>1 month</option>
+        <option value={2 * MONTH}>2 months</option>
+      </select>
+      <FieldError msg={errors.time?.message} />
 
-        <label htmlFor="name">Project name*</label>
-        <input
-          type="text"
-          id="name"
-          {...register("name")}
-          placeholder="Project name"
-        />
-        <FieldError msg={errors.name?.message} />
+      <label htmlFor="videoUrl">Video URL</label>
+      <input
+        type="text"
+        id="videoUrl"
+        {...register("videoUrl")}
+        placeholder="https://youtu.be/<ID>"
+      />
+      <FieldError msg={errors.videoUrl?.message} />
 
-        <label htmlFor="amount">Funding Goal*</label>
-        <input
-          type="number"
-          id="amount"
-          {...register("amount", {
-            valueAsNumber: true,
-          })}
-          placeholder="Funding goal/amount in USD"
-        />
-        <FieldError msg={errors.amount?.message} />
+      <label htmlFor="website">Website*</label>
+      <input
+        type="text"
+        id="website"
+        {...register("website")}
+        placeholder="Website"
+      />
+      <FieldError msg={errors.website?.message} />
 
-        <label htmlFor="time">Funding Time*</label>
-        <select
-          id="time"
-          {...register("time", {
-            valueAsNumber: true,
-          })}
-        >
-          <option value={WEEK}>1 week</option>
-          <option value={2 * WEEK}>2 weeks</option>
-          <option value={MONTH}>1 month</option>
-          <option value={2 * MONTH}>1 motnhs</option>
-        </select>
-        {/* <input
-          type="number"
-          id="time"
-          {...register("time", {
-            valueAsNumber: true,
-          })}
-          placeholder="Funding Time"
-        /> */}
-        <FieldError msg={errors.time?.message} />
+      <label htmlFor="description">Description*</label>
+      <textarea
+        id="description"
+        rows={8}
+        {...register("description")}
+        placeholder="Description"
+      />
+      <FieldError msg={errors.description?.message} />
 
-        <label htmlFor="website">Website*</label>
-        <input
-          type="text"
-          id="website"
-          {...register("website")}
-          placeholder="Website"
-        />
-        <FieldError msg={errors.website?.message} />
+      <label htmlFor="thumbnail">Thumbnail*</label>
+      <input
+        type="file"
+        id="thumbnail"
+        {...register("thumbnail")}
+        placeholder="Thumbnail"
+      />
+      <FieldError msg={errors.thumbnail?.message} />
 
-        <label htmlFor="description">Description*</label>
-        <textarea
-          id="description"
-          rows={8}
-          {...register("description")}
-          placeholder="Description"
-        />
-        <FieldError msg={errors.description?.message} />
+      {disabled ? (
+        <p>Uploading...</p>
+      ) : (
+        <Button type="submit" primary label="Submit" disabled={disabled} />
+      )}
 
-        <label htmlFor="image">Image*</label>
-        <input
-          type="file"
-          id="image"
-          {...register("image")}
-          placeholder="Image"
-        />
-        <FieldError msg={errors.image?.message} />
-
-        {disabled ? (
-          <p>Uploading...</p>
-        ) : (
-          <Button type="submit" primary label="Submit" disabled={disabled} />
-        )}
-
-        <small>* Required fields</small>
-      </form>
-    </React.Fragment>
+      <small>* Required fields</small>
+    </form>
   )
 }
-
-// const projectDataTemplate = {
-//   projectName: "",
-//   website: "",
-//   description: "",
-//   images1: "",
-//   images2: "",
-//   images3: "",
-//   images4: "",
-//   images5: "",
-//   video: "",
-//   fundRaisingGoalAmount: "", // fundingTarget
-//   roadMap: "",
-//   otherSources: "",
-//   projectID: "",
-// };

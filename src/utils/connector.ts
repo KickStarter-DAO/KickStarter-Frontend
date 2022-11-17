@@ -7,11 +7,10 @@ import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 
 const { chains, provider } = configureChains(
-  defaultChains,
+  [chain.polygonMumbai],
   [
     alchemyProvider({
-      apiKey:
-        "siOqyOzfvYhZJr_HOoWfz1Sglg09ffUm",
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
     }),
     publicProvider(),
   ],

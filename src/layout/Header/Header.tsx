@@ -57,7 +57,7 @@ export const Header = () => {
           </svg>
           <Link href="/">
             <a>
-              <h1>KickStarterDao</h1>
+              <h1>QuickfundDao</h1>
             </a>
           </Link>
         </div>

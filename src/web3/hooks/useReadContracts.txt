@@ -1,0 +1,27 @@
+import { useContract, useProvider, useContractRead, useSigner } from "wagmi"
+import { GOVERNANCE_CONTRACT_ADDRESS } from "../constants"
+import governanceAbi from "../abi/governanceContract.json"
+import { ethers } from "ethers"
+
+const useGovernanceContractRead = () => {
+  const { data: entryFee } = useContractRead({
+    address: GOVERNANCE_CONTRACT_ADDRESS,
+    abi: governanceAbi,
+    functionName: "getEnteranceFee",
+  })
+
+  // console.log(entryFee.toString())
+
+  const { data: projectId } = useContractRead({
+    address: GOVERNANCE_CONTRACT_ADDRESS,
+    abi: governanceAbi,
+    functionName: "getCurrentProjectId",
+  })
+
+  return {
+    entryFee,
+    projectId,
+  }
+}
+
+export default useGovernanceContractRead

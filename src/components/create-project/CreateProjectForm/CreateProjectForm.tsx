@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { ethers, BigNumber } from "ethers"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -6,9 +7,8 @@ import { Address, useAccount } from "wagmi"
 import { ipfs } from "@services/ipfs"
 import { Button } from "@components/common/Button"
 import { FieldError } from "@components/common/FieldError"
-import useGovernanceContract from "src/web3/hooks/useContract"
+import { useGovernanceContract } from "src/web3/hooks/useGovernanceContract"
 import toast, { Toaster } from "react-hot-toast"
-import { ethers } from "ethers"
 import { FUNC_FUND } from "src/web3/constants"
 
 const MAX_FILE_SIZE = 500000
@@ -46,7 +46,7 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
-  onCreate: (hash: string) => void
+  onCreate: (projectId: string) => void
 }
 
 // TODO: use WYSIWYG.
@@ -54,8 +54,9 @@ export function CreateProjectForm({
   address,
   onCreate,
 }: CreateProjectFormProps) {
-  const { contract } = useGovernanceContract()
+  const governanceContract = useGovernanceContract()
   const { address: signer } = useAccount()
+  console.log(signer)
 
   // const encode = iface.encodeFunctionData()
 
@@ -82,32 +83,32 @@ export function CreateProjectForm({
       obj["thumbnail"] = `ipfs://${thumbnailCID.path}`
       const json = JSON.stringify(obj, null, 2)
       const jsonCID = await ipfs.add(json)
-      toast.success(`Upload to IPFS success, ${jsonCID.path}`)
+      console.log("Upload to IPFS success", jsonCID.path)
 
       const { amount, time } = data
-      // const resFee = await contract?.paySubmitFee({
-      //   value: ethers.utils.parseEther("0.01"),
-      // })
-      // if (!resFee.hash) return
-      // await resFee.wait()
-      // const projectId = await contract?.getCurrentProjectId()
-      // const encode = await contract?.interface.encodeFunctionData(FUNC_FUND, [
-      //   jsonCID.path,
-      //   amount,
-      //   time,
-      //   projectId?.toString(),
-      // ])
-      // const submitTxn = await contract?.propose(
-      //   [signer],
-      //   [0],
-      //   [encode],
-      //   jsonCID.path,
-      // )
+      const resFee = await governanceContract?.paySubmitFee({
+        value: ethers.utils.parseEther("0.01"),
+      })
+      if (!resFee.hash) return
+      await resFee.wait()
+      const projectId =
+        (await governanceContract?.getCurrentProjectId()) as BigNumber
+      console.log("ProjectId", projectId.toString())
+      const encode = await governanceContract?.interface.encodeFunctionData(
+        FUNC_FUND,
+        [jsonCID.path, amount, time, projectId?.toString()],
+      )
+      const submitTxn = await governanceContract?.propose(
+        [signer],
+        [0],
+        [encode],
+        jsonCID.path,
+      )
 
-      // if (!submitTxn) return
-      // await submitTxn.wait()
+      if (!submitTxn) return
+      await submitTxn.wait()
       toast.success("Proposal created successfully!")
-      onCreate(jsonCID.path)
+      onCreate(projectId.toString())
     } catch (err: any) {
       toast.error(err)
     } finally {

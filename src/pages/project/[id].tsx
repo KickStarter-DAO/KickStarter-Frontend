@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import type { NextPage, NextPageContext } from "next"
 import { useQuery } from "react-query"
+import { useAccount } from "wagmi"
+import { useGovernanceContract } from "src/web3/hooks/useGovernanceContract"
 import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
 import { Button } from "@components/common/Button"
@@ -8,21 +10,35 @@ import { Button } from "@components/common/Button"
 const IPFS_BASE_URL = "https://ipfs.io/ipfs/"
 
 type ProjectProps = {
-  hash: string
+  projectId: string
 }
 
-const Project: NextPage<ProjectProps> = ({ hash }) => {
+const Project: NextPage<ProjectProps> = ({ projectId }) => {
+  const governanceContract = useGovernanceContract()
+  const { address: signer } = useAccount()
+
+  const [hash, setHash] = useState<string | null>(null)
+
+  useEffect(() => {
+    governanceContract?._getHashOfProjectData(projectId).then(setHash)
+  }, [governanceContract, projectId])
+
+  console.log(hash)
+
   const { data, status } = useQuery("project", async () => {
+    if (hash == null) return
     const res = await fetch(`${IPFS_BASE_URL}${hash}`)
     return res.json()
   })
+
+  console.log(data, status)
 
   return (
     <Layout>
       <MetaData />
       {status === "error" && <p>Error fetching data</p>}
       {status === "loading" && <p>Fetching data...</p>}
-      {status === "success" && (
+      {status === "success" && hash != null && (
         <div className="container mx-auto border border-black">
           <div className="flex justify-center gap-x-8">
             <div className="">
@@ -69,11 +85,11 @@ const Project: NextPage<ProjectProps> = ({ hash }) => {
 export default Project
 
 export async function getServerSideProps(context: NextPageContext) {
-  const hash = context.query?.hash
+  const projectId = context.query?.id
 
-  console.log({ hash })
+  console.log({ hash: projectId })
 
-  if (hash == null) {
+  if (projectId == null) {
     return {
       redirect: {
         destination: "/",
@@ -83,7 +99,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
   return {
     props: {
-      hash,
+      projectId,
     },
   }
 }

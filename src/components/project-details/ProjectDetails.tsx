@@ -1,10 +1,15 @@
-import React from "react"
-import { ethers } from "ethers"
+import React, { useState } from "react"
+import { ethers, BigNumber } from "ethers"
 import { useQuery } from "react-query"
 import { useAccount } from "wagmi"
-import { useProjectBalance, useProjectTimeLeft } from "src/web3/hooks"
+import {
+  useGovernanceContract,
+  useProjectBalance,
+  useProjectTimeLeft,
+} from "src/web3/hooks"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
+import toast from "react-hot-toast"
 
 const IPFS_BASE_URL = "https://ipfs.io/ipfs/"
 
@@ -15,6 +20,8 @@ type ProjectDetailsProps = {
 
 export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
   const { address: signer } = useAccount()
+  const [amount, setAmount] = useState("")
+  const contract = useGovernanceContract()
 
   const { data, status } = useQuery("project", async () => {
     const res = await fetch(`${IPFS_BASE_URL}${hash}`)
@@ -24,7 +31,20 @@ export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
   const balance = useProjectBalance(projectId)
   const timeLeft = useProjectTimeLeft(projectId)
 
-  console.log(balance?.toString, timeLeft?.[0].toString())
+  const fundProject = async () => {
+    try {
+      const res = await contract?.fund(3, {
+        value: ethers.utils.parseEther(amount.toString()),
+        gasLimit: '500000',
+      })
+      if (!res.hash) return
+      await res.wait()
+      toast.success(`You have successfully funded this project.`)
+    } catch (error: any) {
+      toast.error(error?.message)
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -65,7 +85,18 @@ export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
               <p className="text-xs mt-1">days to go</p>
 
               <div className="h-8" />
-              <Button primary size="large" label="Back this project" />
+              <input
+                type="number"
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="amount"
+                className="block my-2 w-[18%] p-1 rounded-lg  bg-inherit border-2 border-slate-500"
+              />
+              <Button
+                onClick={fundProject}
+                primary
+                size="large"
+                label="Back this project"
+              />
             </div>
             {/* <img
               src={data.thumbnail.replace("ipfs://", IPFS_BASE_URL)}

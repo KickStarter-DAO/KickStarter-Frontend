@@ -8,12 +8,13 @@ import { MetaData } from "@components/common/MetaData"
 
 type ProjectProps = {
   projectId: string
+  hash: string
 }
 
-const Project: NextPage<ProjectProps> = ({ projectId }) => {
+const Project: NextPage<ProjectProps> = ({ projectId, hash }) => {
   const { address: signer } = useAccount()
 
-  const hash = useProjectHash(projectId)
+  // const hash = useProjectHash(projectId)
 
   console.log("Hash", hash)
 
@@ -34,10 +35,9 @@ export default Project
 
 export async function getServerSideProps(context: NextPageContext) {
   const projectId = context.query?.id
+  const hash = context.query?.hash
 
-  console.log({ hash: projectId })
-
-  if (projectId == null) {
+  if (projectId == null || hash == null) {
     return {
       redirect: {
         destination: "/",
@@ -48,6 +48,7 @@ export async function getServerSideProps(context: NextPageContext) {
   return {
     props: {
       projectId,
+      hash,
     },
   }
 }

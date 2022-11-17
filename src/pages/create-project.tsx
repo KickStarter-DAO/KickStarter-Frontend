@@ -22,8 +22,8 @@ const CreateProject: NextPage = () => {
         {isConnected && (
           <CreateProjectForm
             address={address!}
-            onCreate={(projectId) => {
-              router.push(`/project/${projectId}`)
+            onCreate={(projectId, hash) => {
+              router.push(`/project/${projectId}/${hash}`)
             }}
           />
         )}

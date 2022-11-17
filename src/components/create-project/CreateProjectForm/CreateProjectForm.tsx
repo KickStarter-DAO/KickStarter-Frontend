@@ -46,7 +46,7 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
-  onCreate: (projectId: string) => void
+  onCreate: (projectId: string, hash: string) => void
 }
 
 // TODO: use WYSIWYG.
@@ -108,7 +108,7 @@ export function CreateProjectForm({
       if (!submitTxn) return
       await submitTxn.wait()
       toast.success("Proposal created successfully!")
-      onCreate(projectId.toString())
+      onCreate(projectId.toString(), jsonCID.path)
     } catch (err: any) {
       toast.error(err)
     } finally {

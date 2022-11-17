@@ -25,7 +25,11 @@ const Project: NextPage<ProjectProps> = ({ projectId, hash, host }) => {
       {hash == null || hash.length === 0 ? (
         <p>Fetching project&apos;s data from contract...</p>
       ) : (
-        <ProjectDetails projectId={projectId} hash={hash} />
+        <ProjectDetails
+          projectId={projectId}
+          hash={hash}
+          host={host}
+        />
       )}
       <div className="h-8" />
     </Layout>

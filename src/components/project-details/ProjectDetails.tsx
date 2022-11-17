@@ -1,9 +1,14 @@
-import React from "react"
+import React, { useState } from "react"
 import { ethers } from "ethers"
 import { useQuery } from "react-query"
 import { useAccount } from "wagmi"
+import {
+  useGovernanceContract,
+  useProjectBalance,
+  useProjectTimeLeft,
+  useCountdown
+} from "src/web3/hooks"
 import toast from "react-hot-toast"
-import { useProjectBalance, useProjectTimeLeft, useCountdown } from "src/web3/hooks"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
 
@@ -17,6 +22,8 @@ type ProjectDetailsProps = {
 
 export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
   const { address: signer } = useAccount()
+  const [amount, setAmount] = useState("")
+  const contract = useGovernanceContract()
 
   const { data, status } = useQuery("project", async () => {
     const res = await fetch(`${IPFS_BASE_URL}${hash}`)
@@ -26,6 +33,21 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
   const balance = useProjectBalance(projectId)
   const timeLeft = useProjectTimeLeft(projectId)
   const count = useCountdown(0)
+
+  const fundProject = async () => {
+    try {
+      const res = await contract?.fund(projectId, {
+        value: ethers.utils.parseEther(amount.toString()),
+        gasLimit: '500000',
+      })
+      if (!res.hash) return
+      await res.wait()
+      toast.success(`You have successfully funded this project.`)
+    } catch (error: any) {
+      toast.error(error?.message)
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -65,8 +87,19 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
               </p>
               <p className="text-xs mt-1">days to go</p>
 
-              <div className="h-4" />
-              <Button primary size="large" label="Back this project" />
+              <div className="h-8" />
+              <input
+                type="number"
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="amount"
+                className="block my-2 p-1 rounded-lg  bg-inherit border-2 border-slate-500"
+              />
+              <Button
+                onClick={fundProject}
+                primary
+                size="large"
+                label="Back this project"
+              />
 
               <p className="text-xs mt-4">
                 <u>All or nothing</u>. This project will only be funded

@@ -1,8 +1,8 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { ethers } from "ethers"
 import { useQuery } from "react-query"
 import { useAccount } from "wagmi"
-import { useProjectBalance, useProjectTimeLeft } from "src/web3/hooks"
+import { useProjectBalance, useProjectTimeLeft, useCountdown } from "src/web3/hooks"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
 
@@ -23,15 +23,14 @@ export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
 
   const balance = useProjectBalance(projectId)
   const timeLeft = useProjectTimeLeft(projectId)
-
-  console.log(balance?.toString, timeLeft?.[0].toString())
+  const count = useCountdown(0)
 
   return (
     <>
       {status === "error" && <p>Error fetching data</p>}
       {status === "loading" && <p>Fetching data...</p>}
       {status === "success" && (
-        <div className="container mx-auto border border-black">
+        <div className="container mx-auto pt-8">
           <div className="flex justify-center gap-x-8">
             <div className="">
               <iframe
@@ -59,21 +58,20 @@ export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
 
               <p className="text-xl font-bold mt-3">
                 {timeLeft != null
-                  ? secondsToDhms(timeLeft[0].toNumber())
+                  ? secondsToDhms(timeLeft[0].toNumber() - count)
                   : "..."}
               </p>
               <p className="text-xs mt-1">days to go</p>
 
-              <div className="h-8" />
+              <div className="h-4" />
               <Button primary size="large" label="Back this project" />
+ 
+              <p className="text-xs mt-4">
+                <u>All or nothing</u>. This project will only be funded if it reaches its goal before the deadline</p>
             </div>
-            {/* <img
-              src={data.thumbnail.replace("ipfs://", IPFS_BASE_URL)}
-              alt="cover"
-              className="w-2/3"
-            /> */}
           </div>
-          <p>{JSON.stringify(data)}</p>
+          <h2 className="text-xl mt-8 mb-4">Project description</h2>
+          <p>{data?.description || "TBD"}</p>
         </div>
       )}
     </>

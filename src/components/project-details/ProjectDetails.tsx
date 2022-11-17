@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ethers, BigNumber } from "ethers"
+import { ethers } from "ethers"
 import { useQuery } from "react-query"
 import { useAccount } from "wagmi"
 import {
@@ -33,7 +33,7 @@ export function ProjectDetails({ projectId, hash }: ProjectDetailsProps) {
 
   const fundProject = async () => {
     try {
-      const res = await contract?.fund(3, {
+      const res = await contract?.fund(projectId, {
         value: ethers.utils.parseEther(amount.toString()),
         gasLimit: '500000',
       })

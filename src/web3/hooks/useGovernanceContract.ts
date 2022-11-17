@@ -1,5 +1,4 @@
 import { useContract, useProvider, useSigner } from "wagmi"
-import { BigNumber, ethers } from "ethers"
 import { GOVERNANCE_CONTRACT_ADDRESS } from "../constants"
 import governanceAbi from "../abi/governanceContract.json"
 

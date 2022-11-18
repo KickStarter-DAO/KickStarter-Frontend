@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
-import { FUNC_FUND } from "src/web3/constants"
+import { FUNC_FUND,GOVERNANCE_CONTRACT_ADDRESS } from "src/web3/constants"
 
 type ProposalDetailsProps = {
   proposalId: string
@@ -47,22 +47,22 @@ export function ProposalDetails({
   const queueAndExecute = async () => {
     try {
       const projectId = (await contract?.getCurrentProjectId()) as BigNumber
-
-      const bytes32Hash = ethers.utils.sha256(hash)
+      
+      const bytes32Hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hash))
       // console.log(hexHash)
       // const bytes32Hash =
       //   [...new Array(64 - hexHash.length).fill(0)].join("") + hexHash
       // console.log(bytes32Hash)
-
-      const encode = contract?.interface.encodeFunctionData(FUNC_FUND, [
-        bytes32Hash,
+     // console.log(hash)
+       const encode = contract?.interface.encodeFunctionData(FUNC_FUND, [
+        hash,
         data.amount,
         data.time,
         projectId?.toString(),
-      ])
+      ]) 
 
-      const queueTx = await contract?.queue(
-        [signer],
+        const queueTx = await contract?.queue(
+        [GOVERNANCE_CONTRACT_ADDRESS],
         [0],
         [encode],
         bytes32Hash,
@@ -70,8 +70,8 @@ export function ProposalDetails({
       if (!queueTx.hash) return
       await queueTx.wait()
 
-      const executeTx = await contract?.execute(
-        [signer],
+       const executeTx = await contract?.execute(
+        [GOVERNANCE_CONTRACT_ADDRESS],
         [0],
         [encode],
         bytes32Hash,
@@ -79,7 +79,7 @@ export function ProposalDetails({
       if (!executeTx.hash) return
       await executeTx.wait()
 
-      toast.success(`Queue and Execute success!`)
+      toast.success(`Queue and Execute success!`)   
     } catch (error: any) {
       toast.error(error?.message)
       console.log(error)

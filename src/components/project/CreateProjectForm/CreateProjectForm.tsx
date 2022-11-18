@@ -9,7 +9,7 @@ import { Button } from "@components/common/Button"
 import { FieldError } from "@components/common/FieldError"
 import { useGovernanceContract } from "src/web3/hooks/useGovernanceContract"
 import toast, { Toaster } from "react-hot-toast"
-import { FUNC_FUND } from "src/web3/constants"
+import { FUNC_FUND,GOVERNANCE_CONTRACT_ADDRESS } from "src/web3/constants"
 
 const MAX_FILE_SIZE = 500000
 const DAY = 60 * 60 * 24
@@ -101,8 +101,10 @@ export function CreateProjectForm({
         projectId?.toString(),
       ])
 
+      console.log(`Encode data= ${encode}`)
+
       const proposeTxn = await contract?.propose(
-        [signer],
+        [GOVERNANCE_CONTRACT_ADDRESS],
         [0],
         [encode],
         jsonCID.path,

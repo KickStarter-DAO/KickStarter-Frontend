@@ -12,36 +12,36 @@ import toast from "react-hot-toast"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
 
-type ProjectDetailsProps = {
-  projectId: string
+type ProposalDetailsProps = {
+  proposalId: string
   hash: string
   host: string | undefined
 }
 
-export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
+export function ProposalDetails({
+  proposalId,
+  hash,
+  host,
+}: ProposalDetailsProps) {
   const { address: signer } = useAccount()
   const [amount, setAmount] = useState("")
   const contract = useGovernanceContract()
 
-  const { data, status } = useIPFS("project", hash)
+  const { data, status } = useIPFS("proposal", hash)
 
-  const balance = useProjectBalance(projectId)
-  const timeLeft = useProjectTimeLeft(projectId)
-  const count = useCountdown(0)
-
-  const fundProject = async () => {
-    try {
-      const res = await contract?.fund(projectId, {
-        value: ethers.utils.parseEther(amount.toString()),
-        gasLimit: "500000",
-      })
-      if (!res.hash) return
-      await res.wait()
-      toast.success(`You have successfully funded this project.`)
-    } catch (error: any) {
-      toast.error(error?.message)
-      console.log(error)
-    }
+  const voteProposal = async () => {
+    // try {
+    //   const res = await contract?.fund(proposalId, {
+    //     value: ethers.utils.parseEther(amount.toString()),
+    //     gasLimit: "500000",
+    //   })
+    //   if (!res.hash) return
+    //   await res.wait()
+    //   toast.success(`You have successfully funded this project.`)
+    // } catch (error: any) {
+    //   toast.error(error?.message)
+    //   console.log(error)
+    // }
   }
 
   return (
@@ -67,46 +67,36 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
               ></iframe>
             </div>
             <div className="flex-1 border-t-8 border-teal-600">
-              <p className="text-xl text-teal-600 font-bold mt-3">
-                US${" "}
-                {balance != null ? ethers.utils.formatEther(balance) : "..."}
-              </p>
+              <p className="text-xl text-teal-600 font-bold mt-3">US$ {0}</p>
               <p className="text-xs mt-1">pledged of US$ {data.amount} goal</p>
 
               {/* <p className="text-xl font-bold mt-3">66</p>
               <p className="text-xs mt-1">backers</p> */}
 
               <p className="text-xl font-bold mt-3">
-                {timeLeft != null
-                  ? secondsToDhms(timeLeft[0].toNumber() - count)
-                  : "..."}
+                {secondsToDhms(data.time)}
               </p>
               <p className="text-xs mt-1">days to go</p>
 
               <div className="h-8" />
-              <input
-                type="number"
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="amount"
-                className="block my-2 p-1 rounded-lg  bg-inherit border-2 border-slate-500"
-              />
+
               <Button
-                onClick={fundProject}
+                onClick={voteProposal}
                 primary
                 size="large"
-                label="Back this project"
+                label="Vote for this project"
               />
 
-              <p className="text-xs mt-4">
+              {/* <p className="text-xs mt-4">
                 <u>All or nothing</u>. This project will only be funded if it
                 reaches its goal before the deadline
-              </p>
+              </p> */}
 
               <div
                 title="Share"
                 className="cursor-pointer mt-4 rounded-full bg-teal-600 w-8 h-8 p-2"
                 onClick={() => {
-                  navigator.clipboard.writeText(`${host}/${projectId}/${hash}`)
+                  navigator.clipboard.writeText(`${host}/${proposalId}/${hash}`)
                   toast.success("URL copied to clipboard!")
                 }}
               >

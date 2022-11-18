@@ -5,6 +5,9 @@ import { shortenAddress } from "@utils/connector"
 import { Button as StaticButton } from "@components/common/Button"
 import { Modal } from "@components/common/Modal"
 import { CHAIN_ID } from "src/web3/constants"
+import { useRouter } from "next/router"
+import qflogo1 from "@public/assets/qflogo1.png"
+import { FeatureCard } from "@components/landing/FeatureCard"
 import dynamic from "next/dynamic"
 
 const Button = dynamic<React.ComponentProps<typeof StaticButton>>(
@@ -31,37 +34,54 @@ export const Header = () => {
   }
 
   return (
-    <header>
-      <div className="wrapper">
-        <div>
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g fill="none" fillRule="evenodd">
-              <path
-                d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
-                fill="#FFF"
-              />
-              <path
-                d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
-                fill="#555AB9"
-              />
-              <path
-                d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
-                fill="#91BAF8"
-              />
-            </g>
-          </svg>
-          <Link href="/">
-            <a>
-              <h1>QuickfundDao</h1>
-            </a>
-          </Link>
+    <nav className="bg-white border-gray-200 px-2 md:px-4 py-2.5 dark:bg-green-800">
+      <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+        <div className="flex items-center">
+            <img src="../../../public/assets/qflogo1.png" className="mr-3 h-6 sm:h-9 " alt="Logo" />
+            <span className="self-center text-2xl font-semibold text-green-800 font-bold text-[#118C4F] whitespace-nowrap dark:text-white ">Quickfund DAO</span>
         </div>
-        {!isConnected ? (
+
+          <div id="mega-menu" className="hidden justify-center items-center w-full text-med md:flex md:w-auto md:order-1">
+            <ul className="flex flex-col mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
+                <li>
+                    <Link href="/" className="block py-2 pr-4 pl-3 text-green-400 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-blue-500 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">
+                      Home
+                    </Link>
+                </li>
+
+                <li>
+                    <Link href="/about" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-gray-400 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                    About
+                    </Link>
+                </li>
+
+                <li>
+                <Link href="/create-project" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-gray-400 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                  Start A Business
+                </Link>
+                </li>
+
+                <li>
+                    <Link href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-gray-400 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                      Vote
+                    </Link>
+                </li>
+
+                <li>
+                    <Link href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-gray-400 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                      Invest
+                    </Link>
+                </li>
+
+                <li>
+                    <Link href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-green-400 md:p-0 dark:text-gray-400 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                      Contact
+                    </Link>
+                </li>
+            </ul>
+
+          <div className="mx-20">
+            {!isConnected ? (
           <>
             <Button
               size="large"
@@ -81,8 +101,9 @@ export const Header = () => {
           </>
         )}
         <>
+
           <Modal open={open} onClose={closeWalletModal} label="Connect Wallet">
-            <div className="text-center flex justify-between space-x-12 font-bold ">
+            <div className="text-center flex justify-between space-x-12 font-bold">
               {connectors.map((connector) => (
                 <button
                   className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
@@ -101,7 +122,9 @@ export const Header = () => {
             {error && <div className="text-center my-2">{error.message}</div>}
           </Modal>
         </>
+        </div>
       </div>
-    </header>
+    </div>
+  </nav>
   )
 }

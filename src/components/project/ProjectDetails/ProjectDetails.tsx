@@ -68,10 +68,10 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
             </div>
             <div className="flex-1 border-t-8 border-teal-600">
               <p className="text-xl text-teal-600 font-bold mt-3">
-                US${" "}
+                MATIC{" "}
                 {balance != null ? ethers.utils.formatEther(balance) : "..."}
               </p>
-              <p className="text-xs mt-1">pledged of US$ {data.amount} goal</p>
+              <p className="text-xs mt-1">pledged of MATIC {data.amount} goal</p>
 
               {/* <p className="text-xl font-bold mt-3">66</p>
               <p className="text-xs mt-1">backers</p> */}

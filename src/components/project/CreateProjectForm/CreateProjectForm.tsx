@@ -101,7 +101,7 @@ export function CreateProjectForm({
         projectId?.toString(),
       ])
 
-      console.log(`Encode data= ${encode}`)
+     
 
       const proposeTxn = await contract?.propose(
         [GOVERNANCE_CONTRACT_ADDRESS],

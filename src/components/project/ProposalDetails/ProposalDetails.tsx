@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ethers } from "ethers"
+import { ethers, BigNumber } from "ethers"
 import { useAccount } from "wagmi"
 import {
   useGovernanceContract,
@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
+import { FUNC_FUND } from "src/web3/constants"
 
 type ProposalDetailsProps = {
   proposalId: string
@@ -37,6 +38,48 @@ export function ProposalDetails({
       if (!res.hash) return
       await res.wait()
       toast.success(`Vote cast successully!`)
+    } catch (error: any) {
+      toast.error(error?.message)
+      console.log(error)
+    }
+  }
+
+  const queueAndExecute = async () => {
+    try {
+      const projectId = (await contract?.getCurrentProjectId()) as BigNumber
+
+      const bytes32Hash = ethers.utils.sha256(hash)
+      // console.log(hexHash)
+      // const bytes32Hash =
+      //   [...new Array(64 - hexHash.length).fill(0)].join("") + hexHash
+      // console.log(bytes32Hash)
+
+      const encode = contract?.interface.encodeFunctionData(FUNC_FUND, [
+        bytes32Hash,
+        data.amount,
+        data.time,
+        projectId?.toString(),
+      ])
+
+      const queueTx = await contract?.queue(
+        [signer],
+        [0],
+        [encode],
+        bytes32Hash,
+      )
+      if (!queueTx.hash) return
+      await queueTx.wait()
+
+      const executeTx = await contract?.execute(
+        [signer],
+        [0],
+        [encode],
+        bytes32Hash,
+      )
+      if (!executeTx.hash) return
+      await executeTx.wait()
+
+      toast.success(`Queue and Execute success!`)
     } catch (error: any) {
       toast.error(error?.message)
       console.log(error)
@@ -94,6 +137,11 @@ export function ProposalDetails({
                   }}
                   size="large"
                   label="Vote AGAINST this project"
+                />
+                <Button
+                  onClick={queueAndExecute}
+                  size="large"
+                  label="Queue &amp; Execute"
                 />
               </div>
 

@@ -1,18 +1,16 @@
 import React, { useState } from "react"
 import { ethers } from "ethers"
-import { useQuery } from "react-query"
 import { useAccount } from "wagmi"
 import {
   useGovernanceContract,
   useProjectBalance,
   useProjectTimeLeft,
-  useCountdown
+  useCountdown,
+  useIPFS,
 } from "src/web3/hooks"
 import toast from "react-hot-toast"
 import { Button } from "@components/common/Button"
 import { secondsToDhms } from "@utils/seconds2Dhms"
-
-const IPFS_BASE_URL = "https://ipfs.io/ipfs/"
 
 type ProjectDetailsProps = {
   projectId: string
@@ -25,10 +23,7 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
   const [amount, setAmount] = useState("")
   const contract = useGovernanceContract()
 
-  const { data, status } = useQuery("project", async () => {
-    const res = await fetch(`${IPFS_BASE_URL}${hash}`)
-    return res.json()
-  })
+  const { data, status } = useIPFS("project", hash)
 
   const balance = useProjectBalance(projectId)
   const timeLeft = useProjectTimeLeft(projectId)
@@ -38,7 +33,7 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
     try {
       const res = await contract?.fund(projectId, {
         value: ethers.utils.parseEther(amount.toString()),
-        gasLimit: '500000',
+        gasLimit: "500000",
       })
       if (!res.hash) return
       await res.wait()
@@ -102,8 +97,8 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
               />
 
               <p className="text-xs mt-4">
-                <u>All or nothing</u>. This project will only be funded
-                if it reaches its goal before the deadline
+                <u>All or nothing</u>. This project will only be funded if it
+                reaches its goal before the deadline
               </p>
 
               <div
@@ -114,8 +109,14 @@ export function ProjectDetails({ projectId, hash, host }: ProjectDetailsProps) {
                   toast.success("URL copied to clipboard!")
                 }}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 32 32">
-                  <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  fill="white"
+                  viewBox="0 0 32 32"
+                >
+                  <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
                 </svg>
               </div>
             </div>

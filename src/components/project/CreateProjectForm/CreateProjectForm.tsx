@@ -46,7 +46,8 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
-  onCreate: (projectId: string, hash: string) => void
+  // onCreate: (projectId: string, hash: string) => void
+  onCreate: (proposalId: string) => void
 }
 
 // TODO: use WYSIWYG.
@@ -56,7 +57,6 @@ export function CreateProjectForm({
 }: CreateProjectFormProps) {
   const governanceContract = useGovernanceContract()
   const { address: signer } = useAccount()
-  console.log(signer)
 
   // const encode = iface.encodeFunctionData()
 
@@ -98,17 +98,19 @@ export function CreateProjectForm({
         FUNC_FUND,
         [jsonCID.path, amount, time, projectId?.toString()],
       )
-      const submitTxn = await governanceContract?.propose(
+      const proposeTxn = await governanceContract?.propose(
         [signer],
         [0],
         [encode],
         jsonCID.path,
       )
 
-      if (!submitTxn) return
-      await submitTxn.wait()
+      if (!proposeTxn) return
+      const proposeReceipt = await proposeTxn.wait()
+      const proposalId = proposeReceipt.events[0].args.proposalId
       toast.success("Proposal created successfully!")
-      onCreate(projectId.toString(), jsonCID.path)
+      // onCreate(projectId.toString(), jsonCID.path)
+      onCreate(proposalId)
     } catch (err: any) {
       toast.error(err)
     } finally {

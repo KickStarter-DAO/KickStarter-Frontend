@@ -1,5 +1,7 @@
 export * from "./useGovernanceContract"
+export * from "./useGovernanceContractEvent"
 export * from "./useProjectBalance"
 export * from "./useProjectHash"
 export * from "./useProjectTimeLeft"
 export * from "./useCountdown"
+export * from "./useIPFS"

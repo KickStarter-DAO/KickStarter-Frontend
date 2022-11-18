@@ -28,6 +28,9 @@ export function Hero() {
             size="large"
             backgroundColor="#fff"
             label="Become an Investor"
+            onClick={() => {
+              router.push("/invest")
+            }}
           />
         </div>
       </div>

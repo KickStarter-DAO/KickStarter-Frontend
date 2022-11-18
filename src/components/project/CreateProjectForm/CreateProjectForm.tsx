@@ -147,7 +147,7 @@ export function CreateProjectForm({
         {...register("amount", {
           valueAsNumber: true,
         })}
-        placeholder="Funding goal/amount in USD"
+        placeholder="Funding goal/amount in MATIC"
       />
       <FieldError msg={errors.amount?.message} />
 

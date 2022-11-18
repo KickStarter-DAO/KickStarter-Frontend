@@ -13,7 +13,6 @@ const CreateProject: NextPage = () => {
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
-  const [proposalId, setProposalId] = useState<string | null>(null)
 
   return (
     <Layout>
@@ -27,18 +26,14 @@ const CreateProject: NextPage = () => {
         {isConnected && (
           <CreateProjectForm
             address={address!}
-            // onCreate={(projectId, hash) => {
-            //   router.push(`/project/${projectId}/${hash}`)
-            // }}
-            onCreate={(proposalId) => {
-              setProposalId(proposalId)
+            onCreate={() => {
               setOpen(true)
             }}
           />
         )}
       </div>
       <Modal open={open} onClose={() => {}} label="Connect Wallet">
-        <div className="text-center flex justify-between space-x-12 font-bold ">
+        <div className="flex flex-col gap-y-8">
           <p>
             Your proposal has been sumitted.
             <br />

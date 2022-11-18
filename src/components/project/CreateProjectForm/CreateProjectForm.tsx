@@ -46,7 +46,7 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
-  onCreate: (projectId: string, hash: string) => void
+  onCreate: () => void
 }
 
 // TODO: use WYSIWYG.
@@ -54,9 +54,8 @@ export function CreateProjectForm({
   address,
   onCreate,
 }: CreateProjectFormProps) {
-  const governanceContract = useGovernanceContract()
+  const contract = useGovernanceContract()
   const { address: signer } = useAccount()
-  console.log(signer)
 
   // const encode = iface.encodeFunctionData()
 
@@ -86,29 +85,33 @@ export function CreateProjectForm({
       console.log("Upload to IPFS success", jsonCID.path)
 
       const { amount, time } = data
-      const resFee = await governanceContract?.paySubmitFee({
+      const resFee = await contract?.paySubmitFee({
         value: ethers.utils.parseEther("0.01"),
       })
       if (!resFee.hash) return
       await resFee.wait()
-      const projectId =
-        (await governanceContract?.getCurrentProjectId()) as BigNumber
+
+      const projectId = (await contract?.getCurrentProjectId()) as BigNumber
       console.log("ProjectId", projectId.toString())
-      const encode = await governanceContract?.interface.encodeFunctionData(
-        FUNC_FUND,
-        [jsonCID.path, amount, time, projectId?.toString()],
-      )
-      const submitTxn = await governanceContract?.propose(
+
+      const encode = contract?.interface.encodeFunctionData(FUNC_FUND, [
+        jsonCID.path,
+        amount,
+        time,
+        projectId?.toString(),
+      ])
+
+      const proposeTxn = await contract?.propose(
         [signer],
         [0],
         [encode],
         jsonCID.path,
       )
 
-      if (!submitTxn) return
-      await submitTxn.wait()
+      if (!proposeTxn) return
+      await proposeTxn.wait()
       toast.success("Proposal created successfully!")
-      onCreate(projectId.toString(), jsonCID.path)
+      onCreate()
     } catch (err: any) {
       toast.error(err)
     } finally {

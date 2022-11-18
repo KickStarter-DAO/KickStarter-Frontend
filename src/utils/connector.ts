@@ -6,7 +6,7 @@ import { publicProvider } from "wagmi/providers/public"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 
-const { chains, provider } = configureChains(
+const { chains, provider, webSocketProvider } = configureChains(
   [chain.polygonMumbai],
   [
     alchemyProvider({
@@ -34,7 +34,7 @@ export const client = createClient({
     }),
   ],
   provider,
-  // webSocketProvider
+  webSocketProvider,
 })
 
 export const shortenAddress = (address: string) => {

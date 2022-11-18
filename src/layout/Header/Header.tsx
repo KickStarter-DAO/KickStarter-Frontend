@@ -62,45 +62,39 @@ export const Header = () => {
           </Link>
         </div>
         {!isConnected ? (
-          <>
-            <Button
-              size="large"
-              label="Connect Wallet"
-              onClick={closeWalletModal}
-            />
-          </>
+          <Button
+            size="large"
+            label="Connect Wallet"
+            onClick={closeWalletModal}
+          />
         ) : (
-          <>
-            <Button
-              size="large"
-              label={`${shortenAddress(address!)}`}
-              onClick={() => {
-                disconnect()
-              }}
-            />
-          </>
+          <Button
+            size="large"
+            label={`${shortenAddress(address!)}`}
+            onClick={() => {
+              disconnect()
+            }}
+          />
         )}
-        <>
-          <Modal open={open} onClose={closeWalletModal} label="Connect Wallet">
-            <div className="text-center flex justify-between space-x-12 font-bold ">
-              {connectors.map((connector) => (
-                <button
-                  className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
-                  disabled={!connector.ready}
-                  key={connector.id}
-                  onClick={() => walletHandler(connector)}
-                >
-                  {connector.name}
-                  {!connector.ready && " (unsupported)"}
-                  {isLoading &&
-                    connector.id === pendingConnector?.id &&
-                    " (connecting)"}
-                </button>
-              ))}
-            </div>
-            {error && <div className="text-center my-2">{error.message}</div>}
-          </Modal>
-        </>
+        <Modal open={open} onClose={closeWalletModal} label="Connect Wallet">
+          <div className="text-center flex justify-between space-x-12 font-bold ">
+            {connectors.map((connector) => (
+              <button
+                className="bg-gray-500 p-2 rounded-lg text-[#f9f9f9]"
+                disabled={!connector.ready}
+                key={connector.id}
+                onClick={() => walletHandler(connector)}
+              >
+                {connector.name}
+                {!connector.ready && " (unsupported)"}
+                {isLoading &&
+                  connector.id === pendingConnector?.id &&
+                  " (connecting)"}
+              </button>
+            ))}
+          </div>
+          {error && <div className="text-center my-2">{error.message}</div>}
+        </Modal>
       </div>
     </header>
   )

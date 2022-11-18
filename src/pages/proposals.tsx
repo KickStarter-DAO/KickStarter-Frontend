@@ -1,15 +1,12 @@
 import React from "react"
 import type { NextPage } from "next"
-import { useRouter } from "next/router"
-import { useGovernanceContractEvent } from "src/web3/hooks"
+import { useProposalCreatedEvent } from "src/web3/hooks"
 import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
 import { ProposalCard } from "@components/project/ProposalCard"
 
 const Proposals: NextPage = () => {
-  // const router = useRouter()
-
-  const lastProposal = useGovernanceContractEvent()
+  const lastProposal = useProposalCreatedEvent()
   console.log(lastProposal)
 
   return (

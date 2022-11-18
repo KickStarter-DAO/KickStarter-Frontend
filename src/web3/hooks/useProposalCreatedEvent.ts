@@ -15,7 +15,7 @@ export type ProposalProps = {
   description: string
 }
 
-export const useGovernanceContractEvent = () => {
+export const useProposalCreatedEvent = () => {
   const [events, setEvents] = useState<ProposalProps[]>([])
 
   useEffect(() => {

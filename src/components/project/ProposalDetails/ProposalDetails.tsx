@@ -29,19 +29,18 @@ export function ProposalDetails({
 
   const { data, status } = useIPFS("proposal", hash)
 
-  const voteProposal = async () => {
-    // try {
-    //   const res = await contract?.fund(proposalId, {
-    //     value: ethers.utils.parseEther(amount.toString()),
-    //     gasLimit: "500000",
-    //   })
-    //   if (!res.hash) return
-    //   await res.wait()
-    //   toast.success(`You have successfully funded this project.`)
-    // } catch (error: any) {
-    //   toast.error(error?.message)
-    //   console.log(error)
-    // }
+  const voteProposal = async (support: 0 | 1) => {
+    try {
+      const res = await contract?.castVote(proposalId, support, {
+        gasLimit: "500000",
+      })
+      if (!res.hash) return
+      await res.wait()
+      toast.success(`Vote cast successully!`)
+    } catch (error: any) {
+      toast.error(error?.message)
+      console.log(error)
+    }
   }
 
   return (
@@ -80,12 +79,23 @@ export function ProposalDetails({
 
               <div className="h-8" />
 
-              <Button
-                onClick={voteProposal}
-                primary
-                size="large"
-                label="Vote for this project"
-              />
+              <div className="flex gap-x-2">
+                <Button
+                  onClick={() => {
+                    voteProposal(1)
+                  }}
+                  primary
+                  size="large"
+                  label="Vote FOR this project"
+                />
+                <Button
+                  onClick={() => {
+                    voteProposal(0)
+                  }}
+                  size="large"
+                  label="Vote AGAINST this project"
+                />
+              </div>
 
               {/* <p className="text-xs mt-4">
                 <u>All or nothing</u>. This project will only be funded if it

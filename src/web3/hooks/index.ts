@@ -1,5 +1,5 @@
 export * from "./useGovernanceContract"
-export * from "./useGovernanceContractEvent"
+export * from "./useProposalCreatedEvent"
 export * from "./useProjectBalance"
 export * from "./useProjectHash"
 export * from "./useProjectTimeLeft"

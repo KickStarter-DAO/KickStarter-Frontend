@@ -2,7 +2,7 @@ import React from "react"
 import type { NextPage, NextPageContext } from "next"
 import { useAccount } from "wagmi"
 import { useProjectHash } from "src/web3/hooks"
-import { ProjectDetails } from "@components/project-details/ProjectDetails"
+import { ProjectDetails } from "@components/project/ProjectDetails"
 import { Layout } from "@layout/Layout"
 import { MetaData } from "@components/common/MetaData"
 
@@ -25,11 +25,7 @@ const Project: NextPage<ProjectProps> = ({ projectId, hash, host }) => {
       {hash == null || hash.length === 0 ? (
         <p>Fetching project&apos;s data from contract...</p>
       ) : (
-        <ProjectDetails
-          projectId={projectId}
-          hash={hash}
-          host={host}
-        />
+        <ProjectDetails projectId={projectId} hash={hash} host={host} />
       )}
       <div className="h-8" />
     </Layout>

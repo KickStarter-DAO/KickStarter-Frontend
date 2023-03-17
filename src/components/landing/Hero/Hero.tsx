@@ -31,7 +31,6 @@ export function Hero() {
             size="large"
             backgroundColor="#fff"
             label="Become an Investor"
-          /> */}
         </div>
       </div>
     </div>

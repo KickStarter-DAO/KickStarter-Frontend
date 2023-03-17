@@ -9,7 +9,7 @@ import { Button } from "@components/common/Button"
 import { FieldError } from "@components/common/FieldError"
 import { useGovernanceContract } from "src/web3/hooks/useGovernanceContract"
 import toast, { Toaster } from "react-hot-toast"
-import { FUNC_FUND } from "src/web3/constants"
+import { FUNC_FUND,GOVERNANCE_CONTRACT_ADDRESS } from "src/web3/constants"
 
 const MAX_FILE_SIZE = 500000
 const DAY = 60 * 60 * 24
@@ -46,7 +46,7 @@ const schema = z.object({
 
 type CreateProjectFormProps = {
   address: Address
-  onCreate: (projectId: string, hash: string) => void
+  onCreate: () => void
 }
 
 // TODO: use WYSIWYG.
@@ -54,9 +54,8 @@ export function CreateProjectForm({
   address,
   onCreate,
 }: CreateProjectFormProps) {
-  const governanceContract = useGovernanceContract()
+  const contract = useGovernanceContract()
   const { address: signer } = useAccount()
-  console.log(signer)
 
   // const encode = iface.encodeFunctionData()
 
@@ -86,29 +85,35 @@ export function CreateProjectForm({
       console.log("Upload to IPFS success", jsonCID.path)
 
       const { amount, time } = data
-      const resFee = await governanceContract?.paySubmitFee({
+      const resFee = await contract?.paySubmitFee({
         value: ethers.utils.parseEther("0.01"),
       })
       if (!resFee.hash) return
       await resFee.wait()
-      const projectId =
-        (await governanceContract?.getCurrentProjectId()) as BigNumber
+
+      const projectId = (await contract?.getCurrentProjectId()) as BigNumber
       console.log("ProjectId", projectId.toString())
-      const encode = await governanceContract?.interface.encodeFunctionData(
-        FUNC_FUND,
-        [jsonCID.path, amount, time, projectId?.toString()],
-      )
-      const submitTxn = await governanceContract?.propose(
-        [signer],
+
+      const encode = contract?.interface.encodeFunctionData(FUNC_FUND, [
+        jsonCID.path,
+        amount,
+        time,
+        projectId?.toString(),
+      ])
+
+     
+
+      const proposeTxn = await contract?.propose(
+        [GOVERNANCE_CONTRACT_ADDRESS],
         [0],
         [encode],
         jsonCID.path,
       )
 
-      if (!submitTxn) return
-      await submitTxn.wait()
+      if (!proposeTxn) return
+      await proposeTxn.wait()
       toast.success("Proposal created successfully!")
-      onCreate(projectId.toString(), jsonCID.path)
+      onCreate()
     } catch (err: any) {
       toast.error(err)
     } finally {
@@ -142,7 +147,7 @@ export function CreateProjectForm({
         {...register("amount", {
           valueAsNumber: true,
         })}
-        placeholder="Funding goal/amount in USD"
+        placeholder="Funding goal/amount in MATIC"
       />
       <FieldError msg={errors.amount?.message} />
 
